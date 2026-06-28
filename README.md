@@ -2,7 +2,7 @@
 
 This repository provides a highly scalable and robust framework for training image classification models to detect deepfakes. Built with memory efficiency and massive dataset handling in mind, it leverages **WebDataset** to stream terabytes of data directly from network-attached storage (NAS) or sync them dynamically to local fast storage.
 
-## 🚀 Key Architecture Highlights
+## Key Architecture Highlights
 
 - **WebDataset-based Pipeline**: Processes huge amounts of Real (Label 0) and Fake (Label 1) face images stored as `.tar` shards. Supports chunking (e.g., 35GB per epoch) to control local disk footprint.
 - **Dynamic Data Syncing**: Can stream directly from NAS (`USE_NAS_DIRECTLY = True`) or intelligently sync `.tar` shards via `rsync` to local NVMe storage on a per-epoch basis.
@@ -11,7 +11,7 @@ This repository provides a highly scalable and robust framework for training ima
   - Built-in LR scheduling and model checkpointing based on best **F1-Score**.
 - **Modular Model Ecosystem**: Models are stored in the `models/` directory. Each model defines its own network architecture, optimizer, and image transformations, extending a global configuration.
 
-## 📂 Directory Structure
+## Directory Structure
 
 ```text
 deepfake-detection/
@@ -27,14 +27,14 @@ deepfake-detection/
     └── ...
 ```
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 *Core dependencies include: `torch`, `torchvision`, `webdataset`, `timm`, `tensorboard`, `mlflow`.*
 
-## ⚙️ Dataset Configuration
+## Dataset Configuration
 
 The datasets are defined in `config_global.py` via the `TRAIN_SHARDS` and `TEST_SHARDS` variables. Data is expected to be in WebDataset `.tar` format.
 - **Fake Images (Deepfakes)** are mapped to label **1**.
@@ -46,7 +46,7 @@ Brace expansion is supported for easy shard definitions:
 ("./data/SFHQ/SFHQ_1A/SFHQ_1A-{000000..000223}.tar", 1) # Fake
 ```
 
-## 🧠 How to Add a Custom Model
+## How to Add a Custom Model
 
 The framework automatically discovers models placed inside the `models/` directory. To add a new model (e.g., `my_custom_cnn`), create a folder `models/my_custom_cnn/` containing:
 
@@ -105,7 +105,7 @@ class Model(nn.Module):
         return preds, loss.item()
 ```
 
-## 🚀 Usage
+## Usage
 
 To train all the models discovered in the `models/` directory:
 
@@ -116,7 +116,7 @@ python main.py --local-data-path /mnt/fast_nvme/local_datasets
 - `--local-data-path`: The local directory where data shards will be synced. Ensure the path has sufficient space for `MAX_CHUNK_SIZE_GB` (set in `config_global.py`).
 - If `USE_NAS_DIRECTLY = True` in `config_global.py`, the pipeline bypasses local syncing and streams directly from the defined network paths.
 
-## 📊 Evaluation & Checkpointing
+## Evaluation & Checkpointing
 
 During training, the framework logs validation accuracy and F1-Scores. 
 - The model with the **best validation F1-Score** is automatically saved as a checkpoint in `CHECKPOINT_DIR`.
