@@ -1,0 +1,6 @@
+ipykernel==7.1.0
+mlflow==3.5.1
+pillow==11.3.0
+tensorboard==2.20.0
+webdataset==1.0.2
+timm==0.9.16
